@@ -1,0 +1,46 @@
+<!--- Status.stories.mdx --->
+
+import { Meta, ArgsTable, Canvas, Story } from '@storybook/addon-docs';
+
+import SelectTree from './SelectTree';
+
+<Meta title="components/SelectTree" />
+
+## Usage
+
+<Canvas>
+  <Story name="select-tree-v2">
+    {() => {
+        return <SelectTree options={[
+            {
+                label: 'Folder 1',
+                value: 'folder-1',
+                children: [
+                    {
+                        label: 'Folder 1.1',
+                        value: 'folder-1-1'
+                    },
+                    {
+                        label: 'Folder 1.2',
+                        value: 'folder-1-2',
+                        children: [
+                            {
+                                label: 'Folder 1.2.1',
+                                value: 'folder-1-2-1'
+                            },
+                            {
+                                label: 'Folder 1.2.2',
+                                value: 'folder-1-2-2'
+                            }
+                        ]
+                    },
+                ]
+            },
+            {
+                label: 'Folder 2',
+                value: 'folder-2',
+            }
+        ]} />
+    }}
+  </Story>
+</Canvas>
