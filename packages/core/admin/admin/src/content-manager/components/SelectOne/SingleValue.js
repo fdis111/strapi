@@ -1,5 +1,5 @@
 import React from 'react';
-import { components } from 'react-select';
+import { components } from '@strapi/helper-plugin/ReactSelect';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useIntl } from 'react-intl';

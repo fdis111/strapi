@@ -1,17 +1,22 @@
 /* eslint-disable react/prop-types */
 
 import React, { useEffect, useState, useMemo } from 'react';
-import Select, { components } from 'react-select';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { Flex } from '@strapi/design-system/Flex';
+import { Icon } from '@strapi/design-system/Icon';
+import { Typography } from '@strapi/design-system/Typography';
 import ChevronUp from '@strapi/icons/ChevronUp';
 import ChevronDown from '@strapi/icons/ChevronDown';
+
+import Select, { components } from '../ReactSelect';
+import pxToRem from '../../utils/pxToRem';
 
 const ToggleButton = styled.button`
   align-self: flex-end;
   margin-left: auto;
+  padding: 0.25rem 0.75rem;
 `;
 
 const flattenTree = (tree, parent, depth = 1) =>
@@ -66,11 +71,13 @@ const SelectTree = ({ options: defaultOptions, ...props }) => {
       <>
         <components.Option {...props}>
           <Flex alignItems="start">
-            <span style={{ paddingLeft: `${data.depth * 10}px` }}>{children}</span>
+            <Typography variant="epsilon" textColor="neutral800">
+              <span style={{ paddingLeft: `${data.depth * 10}px` }}>{children}</span>
+            </Typography>
 
             {hasChildren && (
               <ToggleButton type="button" onClick={event => handleToggle(event, data)}>
-                {openValues.includes(data.value) ? <ChevronUp /> : <ChevronDown />}
+                <Icon width={pxToRem(14)} color="neutral500" as={openValues.includes(data.value) ? ChevronUp : ChevronDown} />
               </ToggleButton>
             )}
           </Flex>

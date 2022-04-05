@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { components } from 'react-select';
+import { components } from '@strapi/helper-plugin/ReactSelect';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { get, has, isEmpty } from 'lodash';
