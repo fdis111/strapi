@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Select, { components } from 'react-select';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -27,29 +27,35 @@ const hasParentOrMatchesValue = (option, value) =>
   option.value === value || option.parent === value;
 
 const SelectTree = ({ options: defaultOptions, ...props }) => {
-  const flatDefaultOptions = flattenTree(defaultOptions);
-  const [open, setOpen] = useState([]);
-  const [options, setOptions] = useState(flatDefaultOptions.filter(hasParent));
+  const flatDefaultOptions = useMemo(() => flattenTree(defaultOptions), [defaultOptions]);
+  const toplevelDefaultOptions = useMemo(() => flatDefaultOptions.filter(hasParent), [
+    flatDefaultOptions,
+  ]);
+  const [options, setOptions] = useState(toplevelDefaultOptions);
+  const [openValues, setOpenValues] = useState([]);
 
   useEffect(() => {
-    open.forEach(data => {
-      const flatOptions = flattenTree(defaultOptions);
-      const filtered = flatOptions.filter(
-        option => hasParentOrMatchesValue(option, data.value) || hasParent(option)
+    if (openValues.length === 0) {
+      setOptions(toplevelDefaultOptions);
+    }
+
+    openValues.forEach(value => {
+      const filtered = flatDefaultOptions.filter(
+        option => hasParentOrMatchesValue(option, value) || hasParent(option)
       );
 
       setOptions(filtered);
     });
-  }, [open, defaultOptions]);
+  }, [openValues, flatDefaultOptions, toplevelDefaultOptions]);
 
   function handleToggle(e, data) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (data?.isOpen) {
-      setOpen(prev => prev.filter(prevData => prevData.value !== data.value));
+    if (openValues.includes(data.value)) {
+      setOpenValues(prev => prev.filter(prevData => prevData !== data.value));
     } else {
-      setOpen(prev => [...prev, data]);
+      setOpenValues(prev => [...prev, data.value]);
     }
   }
 
@@ -64,7 +70,7 @@ const SelectTree = ({ options: defaultOptions, ...props }) => {
 
             {hasChildren && (
               <ToggleButton type="button" onClick={event => handleToggle(event, data)}>
-                {data?.isOpen ? <ChevronUp /> : <ChevronDown />}
+                {openValues.includes(data.value) ? <ChevronUp /> : <ChevronDown />}
               </ToggleButton>
             )}
           </Flex>
